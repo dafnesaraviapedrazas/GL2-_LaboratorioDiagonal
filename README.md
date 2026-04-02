@@ -1,22 +1,25 @@
-# Laboratorio: Creación de Script para Movimiento Diagonal
+# Laboratorio: Movimiento en 8 Direcciones/Diagonal - Unreal Engine 4.27
 
-Este proyecto consiste en la modificación de un Actor Pawn en Unreal Engine 4.27 para permitir el desplazamiento en 8 direcciones (ortogonales y diagonales) mediante el uso de enumeradores y lógica de normalización de vectores.
+## 📌 Objetivo
 
-## 🚀 Funcionalidades
+Adaptar un script de tipo Pawn para que el personaje pueda moverse tanto en las 4 direcciones básicas como en diagonales, manteniendo una velocidad constante en todos los casos.
 
-- Movimiento arriba, abajo, izquierda y derecha.
-- Movimiento diagonal (Arriba-Derecha, Arriba-Izquierda, Abajo-Derecha, Abajo-Izquierda).
-- Velocidad constante en diagonal mediante normalización.
+## ✨ ¿Qué hace?
 
-## 🛠️ Detalles Técnicos
+- Movimiento ortogonal: ↑ ↓ ← →
+- Movimiento diagonal: ↗ ↖ ↘ ↙
+- Velocidad uniforme gracias a un factor de corrección
 
-La implementación se basa en la clase `ATopDownMover`. El núcleo de la lógica reside en la función `ManejarDireccionDiagonal`, donde se evalúa el enumerador `EMoveDirection`.
+## ⚙️ ¿Cómo funciona?
 
-### Normalización del Vector
+Se creó una función llamada `ManejarDireccionDiagonal` que recibe la dirección actual (definida en un enumerador) y el tiempo entre frames. Dentro de ella, se usa un `switch` para determinar qué vector de movimiento corresponde.
 
-Para evitar que el objeto se mueva más rápido al combinar dos ejes (Efecto Pitágoras), se aplicó un factor de magnitud de `0.707` (1/√2) en las direcciones diagonales:
+### El truco de las diagonales
+
+Si sumas dos direcciones normales (ej. derecha + arriba), el personaje se mueve más rápido de lo debido por el teorema de Pitágoras (√2 ≈ 1.41). Para evitarlo, se multiplica por **0.707** (que es 1/√2), logrando que la diagonal avance igual que los ejes simples.
 
 ```cpp
+// Ejemplo para diagonal arriba-derecha
 case EMoveDirection::UpRight:
     MovementStep = FVector(0.707f, 0.707f, 0.0f);
     break;
